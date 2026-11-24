@@ -1,0 +1,59 @@
+{% extends 'core/base.html' %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h3>Записи на занятия</h3>
+    {% if user.role_name in 'Администратор Ученик' %}
+        <a href="{% url 'enrollment_create' %}" class="btn btn-success">+ Записаться на занятие</a>
+    {% endif %}
+</div>
+<div class="card mb-4">
+    <div class="card-body">
+        <form method="get" class="row g-3 align-items-end">
+            <div class="col-md-3">
+                <label class="form-label">Статус</label>
+                <select name="status" class="form-select">
+                    <option value="">Все</option>
+                    {% for code, label in statuses %}<option value="{{ code }}" {% if status_filter == code %}selected{% endif %}>{{ label }}</option>{% endfor %}
+                </select>
+            </div>
+            <div class="col-md-4">
+                <label class="form-label">Инструктор</label>
+                <select name="instructor" class="form-select">
+                    <option value="">Все</option>
+                    {% for instr in instructors %}<option value="{{ instr.id }}" {% if instructor_filter == instr.id|stringformat:"s" %}selected{% endif %}>{{ instr.full_name }}</option>{% endfor %}
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label class="form-label">Дата занятия</label>
+                <input type="date" name="date" value="{{ date_filter }}" class="form-control">
+            </div>
+            <div class="col-md-2 d-flex gap-2">
+                <button type="submit" class="btn btn-primary w-100">Применить</button>
+                <a href="{% url 'enrollment_list' %}" class="btn btn-outline-secondary">Сброс</a>
+            </div>
+        </form>
+    </div>
+</div>
+<div class="card">
+    <table class="table table-hover mb-0">
+        <thead class="table-light">
+            <tr><th>ID</th><th>Ученик</th><th>Группа</th><th>Занятие</th><th>Инструктор</th><th>Статус</th><th>Действия</th></tr>
+        </thead>
+        <tbody>
+            {% for e in enrollments %}
+            <tr>
+                <td>{{ e.id }}</td>
+                <td>{{ e.student.full_name }}</td>
+                <td>№{{ e.student.group.number }}</td>
+                <td>{{ e.lesson.lesson_date|date:"d.m.Y" }} {{ e.lesson.lesson_time|time:"H:i" }} ({{ e.lesson.type }})</td>
+                <td>{{ e.lesson.instructor.full_name }}</td>
+                <td><span class="badge {% if e.status == 'Проведена' %}bg-success{% elif e.status == 'Подтверждена' %}bg-primary{% elif e.status == 'Создана' %}bg-secondary{% elif e.status == 'Неявка' %}bg-warning text-dark{% else %}bg-danger{% endif %}">{{ e.status }}</span></td>
+                <td><a href="{% url 'enrollment_detail' e.id %}" class="btn btn-sm btn-outline-primary">Просмотр</a></td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="7" class="text-center text-muted py-4">Записей не найдено</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

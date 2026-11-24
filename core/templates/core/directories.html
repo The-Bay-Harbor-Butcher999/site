@@ -1,0 +1,33 @@
+{% extends 'core/base.html' %}
+{% block content %}
+<h3>Справочники автошколы</h3>
+<div class="row">
+    <div class="col-md-4">
+        <div class="card mb-3">
+            <div class="card-header"><strong>Группы</strong></div>
+            <div class="card-body">
+                <form method="post" class="mb-3">{% csrf_token %}<input type="hidden" name="action" value="add_group"><input type="text" name="number" class="form-control mb-2" placeholder="Номер группы" required><input type="text" name="program" class="form-control mb-2" placeholder="Программа" required><input type="date" name="start_date" class="form-control mb-2" required><input type="date" name="end_date" class="form-control mb-2" required><button class="btn btn-sm btn-primary w-100">+ Добавить группу</button></form>
+                <ul class="list-group">{% for g in groups %}<li class="list-group-item">№{{ g.number }} — {{ g.program }}</li>{% endfor %}</ul>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card mb-3">
+            <div class="card-header"><strong>Инструкторы</strong></div>
+            <div class="card-body">
+                <form method="post" class="mb-3">{% csrf_token %}<input type="hidden" name="action" value="add_instructor"><input type="text" name="full_name" class="form-control mb-2" placeholder="ФИО инструктора" required><input type="text" name="specialization" class="form-control mb-2" placeholder="Специализация" required><input type="text" name="car" class="form-control mb-2" placeholder="Автомобиль"><button class="btn btn-sm btn-primary w-100">+ Добавить инструктора</button></form>
+                <ul class="list-group">{% for i in instructors %}<li class="list-group-item">{{ i.full_name }} ({{ i.car }})</li>{% endfor %}</ul>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card mb-3">
+            <div class="card-header"><strong>Ученики</strong></div>
+            <div class="card-body">
+                <form method="post" class="mb-3">{% csrf_token %}<input type="hidden" name="action" value="add_student"><input type="text" name="full_name" class="form-control mb-2" placeholder="ФИО ученика" required><input type="text" name="phone" class="form-control mb-2" placeholder="Телефон" required><select name="group_id" class="form-select mb-2">{% for g in groups %}<option value="{{ g.id }}">Группа №{{ g.number }}</option>{% endfor %}</select><button class="btn btn-sm btn-primary w-100">+ Добавить ученика</button></form>
+                <ul class="list-group">{% for s in students %}<li class="list-group-item">{{ s.full_name }} (гр. {{ s.group.number }})</li>{% endfor %}</ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

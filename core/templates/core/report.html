@@ -1,0 +1,55 @@
+{% extends 'core/base.html' %}
+{% block content %}
+<h3>Отчёт по посещаемости и загрузке инструкторов</h3>
+<div class="card">
+    <div class="card-body">
+        <form method="get" class="row align-items-end">
+            <div class="col-md-3"><label class="form-label">Период с:</label><input type="date" name="date_from" value="{{ date_from }}" class="form-control"></div>
+            <div class="col-md-3"><label class="form-label">по:</label><input type="date" name="date_to" value="{{ date_to }}" class="form-control"></div>
+            <div class="col-md-6 d-flex gap-2">
+                <button type="submit" class="btn btn-primary">Сформировать</button>
+                <a href="{% url 'export_csv' %}?date_from={{ date_from }}&date_to={{ date_to }}" class="btn btn-outline-success">Экспорт в CSV</a>
+                <a href="{% url 'export_excel' %}?date_from={{ date_from }}&date_to={{ date_to }}" class="btn btn-success">Экспорт в Excel</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="card">
+    <table class="table">
+        <thead><tr><th>Группа</th><th>Инструктор</th><th>Занятий</th><th>Посещено</th><th>Неявок</th></tr></thead>
+        <tbody>
+            {% for r in rows %}
+            <tr><td>{{ r.group }}</td><td>{{ r.instructor }}</td><td>{{ r.lessons }}</td><td>{{ r.attended }}</td><td>{{ r.no_show }}</td></tr>
+            {% empty %}
+            <tr><td colspan="5" class="text-center text-muted">Нет данных за выбранный период</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<div class="card">
+    <div class="card-header">График посещаемости по группам и инструкторам</div>
+    <div class="card-body">
+        <div class="d-flex gap-2 mb-3">
+            <span class="badge bg-success">■ Посещено</span>
+            <span class="badge bg-warning">■ Неявок</span>
+        </div>
+        {% for r in rows %}
+        <div class="mb-3">
+            <div style="font-weight: 600; font-size: 14px; margin-bottom: 4px;">Группа №{{ r.group }} — {{ r.instructor }}</div>
+            <div style="background: #e9ecef; border-radius: 6px; padding: 6px;">
+                <div style="background: #198754; color: #fff; padding: 3px 8px; border-radius: 4px; font-size: 12px; margin-bottom: 4px; width: calc({{ r.attended }} * 40px + 75px); max-width: 100%;">
+                    Посещено: {{ r.attended }}
+                </div>
+                <div style="background: #ffc107; color: #000; padding: 3px 8px; border-radius: 4px; font-size: 12px; width: calc({{ r.no_show }} * 40px + 75px); max-width: 100%;">
+                    Неявок: {{ r.no_show }}
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <p class="text-muted">Нет данных для построения графика.</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

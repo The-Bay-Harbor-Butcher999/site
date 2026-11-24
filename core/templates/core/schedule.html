@@ -1,0 +1,38 @@
+{% extends 'core/base.html' %}
+{% block content %}
+<h3>Расписание занятий</h3>
+{% if user.role_name == 'Администратор' %}
+<div class="card mb-4">
+    <div class="card-header">Добавить занятие в расписание</div>
+    <div class="card-body">
+        <form method="post" class="row g-2">
+            {% csrf_token %}
+            <div class="col-md-2"><input type="date" name="lesson_date" class="form-control" required></div>
+            <div class="col-md-2"><input type="time" name="lesson_time" class="form-control" required></div>
+            <div class="col-md-2"><select name="type" class="form-select"><option value="Теория">Теория</option><option value="Практика">Практика</option></select></div>
+            <div class="col-md-2"><select name="group_id" class="form-select">{% for g in groups %}<option value="{{ g.id }}">Гр. {{ g.number }}</option>{% endfor %}</select></div>
+            <div class="col-md-2"><select name="instructor_id" class="form-select">{% for i in instructors %}<option value="{{ i.id }}">{{ i.full_name }}</option>{% endfor %}</select></div>
+            <div class="col-md-2"><input type="text" name="place" class="form-control" placeholder="Место" required></div>
+            <div class="col-12 mt-2"><button type="submit" class="btn btn-success btn-sm">+ Добавить занятие</button></div>
+        </form>
+    </div>
+</div>
+{% endif %}
+<div class="card">
+    <table class="table table-striped mb-0">
+        <thead><tr><th>Дата и время</th><th>Тип</th><th>Группа</th><th>Инструктор</th><th>Место</th>{% if user.role_name == 'Ученик' %}<th>Действие</th>{% endif %}</tr></thead>
+        <tbody>
+            {% for l in lessons %}
+            <tr>
+                <td>{{ l.lesson_date|date:"d.m.Y" }} {{ l.lesson_time|time:"H:i" }}</td>
+                <td>{{ l.type }}</td>
+                <td>№{{ l.group.number }}</td>
+                <td>{{ l.instructor.full_name }}</td>
+                <td>{{ l.place }}</td>
+                {% if user.role_name == 'Ученик' %}<td><a href="{% url 'enrollment_create' %}?lesson_id={{ l.id }}" class="btn btn-sm btn-success">Записаться</a></td>{% endif %}
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

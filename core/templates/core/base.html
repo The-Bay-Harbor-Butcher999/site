@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Автошкола «Драйв»{% endblock %}</title>
+    <style>
+        * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { margin: 0; background-color: #f4f6f9; color: #212529; line-height: 1.5; }
+        .navbar { background-color: #212529; color: #fff; padding: 14px 0; margin-bottom: 24px; box-shadow: 0 2px 4px rgba(0,0,0,.1); }
+        .container { max-width: 1140px; margin: 0 auto; padding: 0 16px; }
+        .nav-flex { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
+        .navbar-brand { color: #fff; text-decoration: none; font-size: 20px; font-weight: bold; }
+        .navbar-nav { list-style: none; display: flex; gap: 18px; margin: 0; padding: 0; }
+        .nav-link { color: #ced4da; text-decoration: none; font-size: 15px; transition: .2s; }
+        .nav-link:hover { color: #fff; }
+        .badge { display: inline-block; padding: 4px 8px; font-size: 12px; font-weight: 600; border-radius: 4px; color: #fff; background: #6c757d; }
+        .bg-info { background-color: #0dcaf0 !important; color: #000 !important; }
+        .bg-success { background-color: #198754 !important; }
+        .bg-primary { background-color: #0d6efd !important; }
+        .bg-secondary { background-color: #6c757d !important; }
+        .bg-warning { background-color: #ffc107 !important; color: #000 !important; }
+        .bg-danger { background-color: #dc3545 !important; }
+        .card { background: #fff; border: 1px solid #dee2e6; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,.05); margin-bottom: 20px; overflow: hidden; }
+        .card-header { background: #f8f9fa; padding: 12px 18px; border-bottom: 1px solid #dee2e6; font-weight: 600; }
+        .card-header.bg-dark { background: #212529 !important; color: #fff; }
+        .card-body { padding: 20px; }
+        .btn { display: inline-block; padding: 8px 14px; font-size: 14px; font-weight: 500; text-decoration: none; border-radius: 6px; border: 1px solid transparent; cursor: pointer; transition: .15s; text-align: center; }
+        .btn-sm { padding: 5px 10px; font-size: 13px; }
+        .w-100 { width: 100%; }
+        .btn-primary { background: #0d6efd; color: #fff; }
+        .btn-primary:hover { background: #0b5ed7; }
+        .btn-success { background: #198754; color: #fff; }
+        .btn-success:hover { background: #157347; }
+        .btn-danger { background: #dc3545; color: #fff; }
+        .btn-warning { background: #ffc107; color: #000; }
+        .btn-secondary { background: #6c757d; color: #fff; }
+        .btn-outline-primary { border-color: #0d6efd; color: #0d6efd; background: transparent; }
+        .btn-outline-primary:hover { background: #0d6efd; color: #fff; }
+        .btn-outline-success { border-color: #198754; color: #198754; background: transparent; }
+        .btn-outline-secondary { border-color: #6c757d; color: #6c757d; background: transparent; }
+        .btn-outline-danger { border-color: #dc3545; color: #dc3545; background: transparent; }
+        .btn-outline-light { border-color: #f8f9fa; color: #f8f9fa; background: transparent; }
+        .form-label { display: block; margin-bottom: 6px; font-weight: 500; font-size: 14px; }
+        .form-control, .form-select { width: 100%; padding: 8px 12px; font-size: 14px; border: 1px solid #ced4da; border-radius: 6px; background: #fff; }
+        .form-control:focus, .form-select:focus { outline: none; border-color: #86b7fe; box-shadow: 0 0 0 3px rgba(13,110,253,.2); }
+        .mb-2 { margin-bottom: 8px; } .mb-3 { margin-bottom: 16px; } .mb-4 { margin-bottom: 24px; } .mt-2 { margin-top: 8px; } .mt-3 { margin-top: 16px; } .mt-5 { margin-top: 48px; }
+        .d-flex { display: flex; } .justify-content-between { justify-content: space-between; } .justify-content-center { justify-content: center; } .align-items-center { align-items: center; } .align-items-end { align-items: flex-end; } .gap-2 { gap: 8px; } .flex-wrap { flex-wrap: wrap; }
+        .row { display: flex; flex-wrap: wrap; gap: 16px; }
+        .col-md-2 { flex: 1 1 140px; } .col-md-3 { flex: 1 1 200px; } .col-md-4 { flex: 1 1 280px; } .col-md-5 { width: 100%; max-width: 440px; } .col-md-6 { flex: 1 1 45%; } .col-12 { width: 100%; }
+        .table { width: 100%; border-collapse: collapse; }
+        .table th, .table td { padding: 12px 14px; text-align: left; border-bottom: 1px solid #dee2e6; font-size: 14px; }
+        .table th { background: #f8f9fa; font-weight: 600; }
+        .table-hover tbody tr:hover { background: #f1f3f5; }
+        .list-group { list-style: none; padding: 0; margin: 0; }
+        .list-group-item { padding: 10px 14px; border-bottom: 1px solid #dee2e6; font-size: 14px; }
+        .alert { padding: 12px 16px; border-radius: 6px; margin-bottom: 16px; background: #cff4fc; color: #055160; border: 1px solid #b6effb; }
+        .alert-error, .alert-danger { background: #f8d7da; color: #842029; border-color: #f5c2c7; }
+        .alert-success { background: #d1e7dd; color: #0f5132; border-color: #badbcc; }
+        .alert-warning { background: #fff3cd; color: #664d03; border-color: #ffecb5; }
+        .text-center { text-align: center; } .text-muted { color: #6c757d; }
+        .input-group { display: flex; gap: 8px; }
+    </style>
+</head>
+<body>
+{% if user.is_authenticated %}
+<nav class="navbar">
+    <div class="container nav-flex">
+        <div class="d-flex align-items-center" style="gap: 24px;">
+            <a class="navbar-brand" href="{% url 'enrollment_list' %}">🚗 Автошкола «Драйв»</a>
+            <ul class="navbar-nav">
+                <li><a class="nav-link" href="{% url 'enrollment_list' %}">Записи на занятия</a></li>
+                <li><a class="nav-link" href="{% url 'schedule' %}">Расписание</a></li>
+                {% if user.role_name == 'Администратор' %}
+                <li><a class="nav-link" href="{% url 'directories' %}">Справочники</a></li>
+                <li><a class="nav-link" href="{% url 'users' %}">Пользователи</a></li>
+                <li><a class="nav-link" href="{% url 'reports' %}">Отчёты</a></li>
+                {% endif %}
+            </ul>
+        </div>
+        <div class="d-flex align-items-center gap-2">
+            <span>{{ user.display_name }} <span class="badge bg-info">{{ user.role_name }}</span></span>
+            <a href="{% url 'logout' %}" class="btn btn-outline-light btn-sm">Выход</a>
+        </div>
+    </div>
+</nav>
+{% endif %}
+
+<div class="container">
+    {% for message in messages %}
+        <div class="alert alert-{{ message.tags|default:'info' }}">
+            {{ message }}
+        </div>
+    {% endfor %}
+    {% block content %}{% endblock %}
+</div>
+</body>
+</html>
